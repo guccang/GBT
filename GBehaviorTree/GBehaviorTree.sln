@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GBehaviorTreeTest", "GBehaviorTree\GBehaviorTreeTest.csproj", "{EAD857A5-5C5C-4487-B904-48894A9B1FB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAD857A5-5C5C-4487-B904-48894A9B1FB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAD857A5-5C5C-4487-B904-48894A9B1FB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAD857A5-5C5C-4487-B904-48894A9B1FB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD857A5-5C5C-4487-B904-48894A9B1FB3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {91971FE4-8B06-4587-971B-4F3DE65097DA}
+	EndGlobalSection
+EndGlobal
