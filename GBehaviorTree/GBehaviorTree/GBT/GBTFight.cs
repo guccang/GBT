@@ -24,7 +24,7 @@ namespace GBT
         }
     }
 
-    class ACT_CalcSkillId:GBTLeafNode
+    class ACT_CalcSkillId:ACT_LeafNode
     {
         protected override ENodeState onUpdate()
         {
@@ -43,7 +43,7 @@ namespace GBT
         }
     }
 
-    class ACT_MovTo : GBTLeafNode
+    class ACT_MovTo : ACT_LeafNode
     {
         private int _testMoveCnt = 10;
         protected override bool onEvaluate()
@@ -81,7 +81,7 @@ namespace GBT
         }
     }
 
-    class ACT_UseSkill:GBTLeafNode
+    class ACT_UseSkill:ACT_LeafNode
     {
         private int _testUseSkill = 3;
         protected override bool onEvaluate()
@@ -148,7 +148,7 @@ namespace GBT
         }
     }
 
-    class ACT_Idle:GBTLeafNode
+    class ACT_Idle:ACT_LeafNode
     {
         protected override ENodeState onUpdate()
         {

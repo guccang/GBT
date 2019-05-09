@@ -5,17 +5,9 @@ using System.Text;
 namespace GBT
 {
     // 执行节点
-    public class GBTLeafNode : GBTNode
+    public class ACT_LeafNode : GBTNode
     {
        
-        public override void SetBB(BlackBoard bb)
-        {
-            base.SetBB(bb);
-
-            if (null != _preCondition)
-                _preCondition.SetBB(bb);
-        }
-
         protected override void onTransition()
         {
             _preCondition = null;
@@ -28,8 +20,4 @@ namespace GBT
         }
     }
 
-    public class GBTMoveTo : GBTLeafNode
-    {
-
-    }
 }

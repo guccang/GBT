@@ -14,7 +14,8 @@ class LogConfig
     {
         GlobalContext.Properties["FolderName"] = AppDomain.CurrentDomain.BaseDirectory;
         GlobalContext.Properties["FileName"] = "GBT.log";
-        string fileName = AppDomain.CurrentDomain.BaseDirectory + "config.log4net";
+        //string fileName = AppDomain.CurrentDomain.BaseDirectory + "config.log4net";
+        string fileName = Environment.CurrentDirectory + "/config.log4net";
         var rep = log4net.LogManager.CreateRepository(_logRepositoryName);
         var ret = log4net.Config.XmlConfigurator.ConfigureAndWatch(rep, new FileInfo(fileName));
     }
@@ -117,6 +118,8 @@ namespace GBT
         public virtual void SetBB(BlackBoard bb)
         {
             _bb = bb;
+            if (null != _preCondition)
+                _preCondition.SetBB(bb);
         }
         public BlackBoard GetBB()
         {

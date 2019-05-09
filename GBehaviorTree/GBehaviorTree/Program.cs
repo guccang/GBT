@@ -1,7 +1,7 @@
 ﻿using GBT;
 namespace GBehaviorTreeTest
 {
-    public class GBT2Action : GBTLeafNode
+    public class GBT2Action : ACT_LeafNode
     {
         private int _cnt;
         public GBT2Action SetCnt (int cnt)
@@ -25,14 +25,23 @@ namespace GBehaviorTreeTest
             LogConfig.InitLog();
             var log = LogConfig.GetLog(typeof(Program));
             GBehaviorTree tree = new GBehaviorTree();
-            var root = new GBTSelector();
-            var fight = GBTFight.Create();
-            var idle  = GBTIdle.Create();
-            root.Add(idle.SetPreCondition(new CON_GBTCanIdle()))
-                .Add(fight.SetPreCondition(new CON_GBTCanFight()))
+            var seq = new GBTSequence();
+            seq.Add(new GBTCondition())
+                .Add(new ACT_LeafNode())
+                .Add(new GBTLoop())
                 ;
 
-            tree.SetCurrentTree(root);
+            var loop = new GBTLoop().SetCnt(10);
+            loop.Add(new ACT_LeafNode())
+                .Add(new ACT_CalcSkillId())
+                ;
+
+            var sel = new GBTSelector();
+                sel.Add(new GBTIdle().SetPreCondition(new CON_GBTCanIdle()))
+                .Add(new GBTFight().SetPreCondition(new CON_GBTCanFight()))
+                ;
+
+            tree.SetCurrentTree(sel);
             for (int i=0;i<300;++i)
             {
                 log.Warn($"update..... {i}");
