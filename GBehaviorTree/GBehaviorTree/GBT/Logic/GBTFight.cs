@@ -228,6 +228,11 @@ namespace GBT
                 }
             }
         }
+        public void Transition()
+        {
+            if (null != _root)
+                _root.Transition();
+        }
         public bool IsFinish()
         {
             if (null == _root)

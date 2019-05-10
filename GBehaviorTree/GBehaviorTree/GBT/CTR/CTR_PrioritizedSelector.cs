@@ -32,16 +32,20 @@ namespace GBT
      
         protected override ENodeState onUpdate()
         {
-            if(false == isValidateIndex(_activityIndex))
+            if (_children.Count <= 0)
+                _state = ENodeState.success;
+
+            if (false == isValidateIndex(_activityIndex))
             {
                 _activityIndex = calcPriorityIndex();
-                if(false == isValidateIndex(_activityIndex))
-                {
-                    _state = ENodeState.success;
-                    return _state;
-                }
+                //if(false == isValidateIndex(_activityIndex))
+                //{
+                //    _state = ENodeState.success;
+                //    return _state;
+                //}
             }
 
+            // _usedIndex modify by calcPriorityIndex
             for (int i = _usedIndex.Count; i < _children.Count; ++i)
             {
                 var child = _children[_activityIndex];
@@ -61,17 +65,7 @@ namespace GBT
                 }
             }
 
-            if(_state == ENodeState.failed)
-            {
-                _activityIndex = calcPriorityIndex();
-                if(isValidateIndex(_activityIndex))
-                {
-                    _state = ENodeState.running;
-                }
-            }
-
-            if (_children.Count <= 0)
-                _state = ENodeState.success;
+           
 
             return _state;
         }
@@ -93,15 +87,14 @@ namespace GBT
             }
 
             int step = RandomHelp.Next(totalWeight);
-            var keys = new List<int>(_indexPriority.Keys);
             int incWeight = 0;
-            for(int i=0; i< keys.Count; ++i)
+            foreach(var priority in _indexPriority)
             {
-                int key = keys[i];
+                int key = priority.Key;
                 if ( _usedIndex.Contains(key))
                     continue;
 
-                incWeight += _indexPriority[key];
+                incWeight += priority.Value;
                 if (step <= incWeight)
                 {
                     index = key;

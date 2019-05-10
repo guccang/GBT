@@ -72,8 +72,7 @@ namespace GBehaviorTreeTest
 
             var selPri = Pool.Get < CTR_PrioritizedSelector>().SetName("selPri");
             selPri.Add(Pool.Get < ACT_LeafNode>(), 100)
-                .Add(Pool.Get < CON_False>(), 100)
-                .Add(Pool.Get < CON_True>(), 1000)
+                .Add(Pool.Get < CON_True>(), 100)
                 .Add(Pool.Get < GBTLoop>().SetCnt(1), 100)
                 ;
 
@@ -89,12 +88,15 @@ namespace GBehaviorTreeTest
 
             int cnt = trees.Count;
             System.Random r = new System.Random();
-            for (int i=0;i<30;++i)
+            tree.SetCurrentTree(selPri);
+            for (int i=0;i<30000;++i)
             {
                 log.Warn($"update..... {i}");
-                if(tree.IsFinish())
-                    tree.SwitchTo(trees[r.Next(cnt)]);
+                //if(tree.IsFinish())
+                //    tree.SwitchTo(trees[r.Next(cnt)]);
                 tree.Update();
+                if (tree.IsFinish())
+                    tree.Transition();
             }
 
             // Object Pool
