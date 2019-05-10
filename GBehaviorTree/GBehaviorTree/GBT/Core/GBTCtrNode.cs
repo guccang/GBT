@@ -65,10 +65,6 @@ namespace GBT
             base.Free();
 #endif
         }
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
         public void ForEach(Func<GBTNode, bool> func)
         {
             if (null == func)
