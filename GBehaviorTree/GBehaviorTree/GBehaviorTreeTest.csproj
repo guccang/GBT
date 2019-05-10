@@ -5,6 +5,10 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;GUCCANG_OBJ_POOL;NETCOREAPP;NETCOREAPP2_0;NETCOREAPP;NETCOREAPP2_0</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>

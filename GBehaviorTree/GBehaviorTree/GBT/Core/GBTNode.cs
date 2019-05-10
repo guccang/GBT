@@ -45,6 +45,11 @@ namespace GBT
             else
                 _bbInt.Add(key, value);
         }
+        public void ModifyInt(string key,int value)
+        {
+            if (_bbInt.ContainsKey(key))
+                _bbInt[key] += value;
+        }
         public void Clear()
         {
             if (null != _bbInt)
@@ -60,7 +65,7 @@ namespace GBT
     }
 
     // 行为树节点
-    public class GBTNode
+    public class GBTNode 
     {
         protected static ILog log = LogConfig.GetLog(typeof(GBTNode));
         public enum ENodeState
@@ -77,15 +82,25 @@ namespace GBT
         protected ENodeState _state;
         protected string _debugKey;
         protected GBTCondition _preCondition;
+        protected string _name;
 
 
         public ENodeState State { get { return _state; } }
+        public GBTNode SetName(string name)
+        {
+            _name = name;
+            return this;
+        }
+        public string GetName()
+        {
+            return _name;
+        }
         public virtual void SetKey (string key,int index=1)
         {
             if(null != _parent)
-                _debugKey = $"{key}({this})-{index}";
+                _debugKey = $"{_name}-{key}({this})-{index}";
             else
-                _debugKey = key;
+                _debugKey = $"{_name}-{key}";
 
             if (this is GBTCtrNode)
             {
@@ -125,7 +140,7 @@ namespace GBT
         {
             return _bb;
         }
-
+        
        // 评估节点是否可以执行
         // 节点执行条件和所需数据是否正确
         public bool Evaluate()
@@ -142,6 +157,8 @@ namespace GBT
         public void Transition()
         {
             //logDebug("Transition");
+            if (null != _preCondition)
+                _preCondition.Transition();
             onTransition();
             _state = ENodeState.init;
         }
@@ -156,6 +173,26 @@ namespace GBT
                 Update();
             return _state;
         }
+
+        public bool IsFinish()
+        {
+            return _state != ENodeState.running;
+        }
+
+
+        public virtual void Free()
+        {
+#if GUCCANG_OBJ_POOL
+            if (null != _preCondition)
+                _preCondition.Free();
+
+            ObjectPoolMgr.Free(this);
+#endif
+        }
+
+        /// <summary>
+        /// /////////////////////////////////////////
+
         protected bool isRunning() { return _state == ENodeState.running; }
         protected void logDebug(string str)
         {
@@ -191,41 +228,6 @@ namespace GBT
     }
 
   
-
-
-    // 行为树
-    public class GBehaviorTree
-    {
-        private GBTNode _root;
-        private BlackBoard _bb;
-
-        public GBehaviorTree()
-        {
-            _bb = new BlackBoard();
-            _root = null;
-        }
-        public void SetCurrentTree(GBTNode tree)
-        {
-            _root = tree;
-            _root.SetBB(_bb);
-            _root.SetKey("root");
-        }
-        public void Update()
-        {
-            if(null != _root)
-            {
-                if (_root.Evaluate())
-                {
-                    _root.Update();
-                }
-                else
-                {
-                    _root.Transition();
-                    _root.Update();
-                }
-            }
-        }
-    }
 
     
 }

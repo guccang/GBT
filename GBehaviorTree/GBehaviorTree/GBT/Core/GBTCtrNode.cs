@@ -16,6 +16,13 @@ namespace GBT
             _maxChild = 901124;
             _activityIndex = -1;
         }
+
+        public new GBTCtrNode SetName(string name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
         public int GetMaxChildCount()
         {
             return _maxChild;
@@ -47,6 +54,17 @@ namespace GBT
 
             return _children[index];
         }
+        public override void Free()
+        {
+#if GUCCANG_OBJ_POOL
+            ForEach(child =>
+            {
+                child.Free();
+                return true;
+            });
+            base.Free();
+#endif
+        }
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
@@ -72,6 +90,7 @@ namespace GBT
                 });
             }
         }
+
         protected bool isValidateIndex(int index)
         {
             if (index < 0)

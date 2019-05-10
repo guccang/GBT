@@ -12,6 +12,9 @@ namespace GBT
         public GBTSequence()
         {
         }
+
+      
+
         protected override ENodeState onUpdate()
         {
             if (false == isValidateIndex(_activityIndex))

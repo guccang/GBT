@@ -4,7 +4,20 @@ using System.Text;
 
 namespace GBT
 {
-    class CON_GBTCanFight : GBTCondition
+    public class ACT_LeafNode : GBTLeafNode
+    {
+      
+        protected override void onTransition()
+        {
+            base.onTransition();
+        }
+
+        protected override ENodeState onUpdate()
+        {
+            return base.onUpdate();
+        }
+    }
+    class CON_CanFight : GBTCondition
     {
         public override bool IsTrue()
         {
@@ -26,6 +39,7 @@ namespace GBT
 
     class ACT_CalcSkillId:ACT_LeafNode
     {
+     
         protected override ENodeState onUpdate()
         {
             int skillId = calcSkillId();
@@ -45,6 +59,7 @@ namespace GBT
 
     class ACT_MovTo : ACT_LeafNode
     {
+      
         private int _testMoveCnt = 10;
         protected override bool onEvaluate()
         {
@@ -113,7 +128,7 @@ namespace GBT
         {
             var gbtFight = new GBTFight();
 
-            gbtFight.Add(new CON_GBTCanFight())
+            gbtFight.Add(new CON_CanFight())
                 .Add(new ACT_CalcSkillId())
                 .Add(new ACT_MovTo().SetPreCondition(new CON_DistanceUseSkill()))
                 .Add(new ACT_UseSkill())
@@ -124,13 +139,11 @@ namespace GBT
     }
 
 
-
-    class CON_GBTCanIdle: GBTCondition
+    class CON_CanIdle: GBTCondition
     {
-        private int _testCanIdle = 3;
         public override bool IsTrue()
         {
-            if(_testCanIdle-- > 0)
+            if(_bb.GetInt("bbIdleCnt") > 0)
             {
                 return true;
             }
@@ -143,16 +156,15 @@ namespace GBT
 
         protected override void onTransition()
         {
-            //_testCanIdle = 3;
             base.onTransition();
         }
     }
 
-    class ACT_Idle:ACT_LeafNode
+    class ACT_Idle : GBTLeafNode
     {
         protected override ENodeState onUpdate()
         {
-            logDebug("In Idle");
+            logDebug("in idle");
             return base.onUpdate();
         }
     }
@@ -163,10 +175,65 @@ namespace GBT
         public static GBTIdle Create()
         {
             var gbtIdle = new GBTIdle();
-            gbtIdle.Add(new CON_GBTCanIdle())
+            gbtIdle.Add(new CON_CanIdle())
                 .Add(new ACT_Idle())
                 ;
             return gbtIdle;
+        }
+    }
+
+
+    // 行为树
+    public class GBehaviorTree
+    {
+        private GBTNode _root;
+        private BlackBoard _bb;
+
+        public BlackBoard GetBB()
+        {
+            return _bb;
+        }
+
+        public GBehaviorTree()
+        {
+            _bb = new BlackBoard();
+            _root = null;
+        }
+        public void SetCurrentTree(GBTNode tree)
+        {
+            _bb.SetInt("bbIdleCnt", 3);
+            _root = tree;
+            _root.Transition();
+
+            _root.SetBB(_bb);
+            _root.SetKey("root:"+tree.ToString());
+        }
+        public void SwitchTo(GBTNode tree)
+        {
+            if (null == tree)
+                return;
+
+            if (_root != null)
+                _root.Transition();
+
+            SetCurrentTree(tree);
+        }
+        public void Update()
+        {
+            if (null != _root)
+            {
+                if (_root.Evaluate())
+                {
+                    _root.Update();
+                }
+            }
+        }
+        public bool IsFinish()
+        {
+            if (null == _root)
+                return true;
+
+            return _root.IsFinish();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GBT
             _tmpCnt = cnt;
             return this;
         }
-
+      
         protected override void onTransition()
         {
             _tmpCnt = _cnt;

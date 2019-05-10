@@ -10,6 +10,8 @@ namespace GBT
     /// </summary>
     public class GBTSelector : GBTCtrNode
     {
+      
+
         protected override ENodeState onUpdate()
         {
             if (false == isValidateIndex(_activityIndex))
@@ -29,11 +31,12 @@ namespace GBT
 
             }
 
-            if(isValidateIndex(_activityIndex+1) && _state == ENodeState.failed)
-            {
-                _activityIndex++;
-                _state = ENodeState.running;
-            }
+            // this is impossiable
+            //if(isValidateIndex(_activityIndex+1) && _state == ENodeState.failed)
+            //{
+            //    _activityIndex++;
+            //    _state = ENodeState.running;
+            //}
 
             if (_children.Count <= 0)
                 _state = ENodeState.success;
