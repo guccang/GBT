@@ -17,7 +17,7 @@ namespace GBT
             _activityIndex = -1;
         }
 
-        public new GBTCtrNode SetName(string name)
+        public new GBTCtrNode SetDebugName(string name)
         {
             base.SetName(name);
             return this;

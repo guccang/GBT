@@ -33,44 +33,44 @@ namespace GBehaviorTreeTest
 
             GBehaviorTree tree = Pool.Get<GBehaviorTree>();
 
-            var seq = Pool.Get<GBTSequence>().SetName("seq");
+            var seq = Pool.Get<GBTSequence>().SetDebugName("seq");
 
             seq.Add(Pool.Get<GBTCondition>())
                 .Add(Pool.Get< ACT_LeafNode>())
                 .Add(Pool.Get< GBTLoop>().SetCnt(3))
                 ;
 
-            var loop = Pool.Get < GBTLoop>().SetCnt(10).SetName("loop");
+            var loop = Pool.Get < GBTLoop>().SetCnt(10).SetDebugName("loop");
             loop.Add(Pool.Get < ACT_LeafNode>())
                 .Add(Pool.Get < ACT_CalcSkillId>())
                 ;
 
-            var sel = Pool.Get < GBTSelector>().SetName("sel");
+            var sel = Pool.Get < GBTSelector>().SetDebugName("sel");
                 sel.Add(Pool.Get < GBTIdle>().SetPreCondition(Pool.Get < CON_CanIdle>()))
                 .Add(Pool.Get < GBTFight>().SetPreCondition(Pool.Get < CON_False>()))
                 .Add(Pool.Get < GBTLoop>().SetCnt(10))
                 ;
 
-            var seqNot = Pool.Get < GBTSequence>().SetName("seqNot");
+            var seqNot = Pool.Get < GBTSequence>().SetDebugName("seqNot");
             seqNot.Add(Pool.Get < GBTSequence>())
                  .Add(Pool.Get < CON_Not>().Add(Pool.Get < CON_CanIdle>()))
                  .Add(Pool.Get < ACT_LeafNode>())
                  .Add(Pool.Get < GBTLoop>().SetCnt(3).Add(Pool.Get < ACT_LeafNode>()))
                  ;
 
-            var seqOr = Pool.Get < GBTSequence>().SetName("seqOr");
+            var seqOr = Pool.Get < GBTSequence>().SetDebugName("seqOr");
             seqOr
                  .Add(Pool.Get < CON_Or>().Add(Pool.Get < CON_CanIdle>()).Add(Pool.Get < CON_True>()))
                  .Add(Pool.Get < ACT_LeafNode>())
                  ;
 
-            var seqAnd = Pool.Get < GBTSequence>().SetName("seqAnd");
+            var seqAnd = Pool.Get < GBTSequence>().SetDebugName("seqAnd");
             seqAnd
                  .Add(Pool.Get < CON_And>().Add(Pool.Get < CON_CanIdle>()).Add(Pool.Get < CON_True>()))
                  .Add(Pool.Get < ACT_LeafNode>())
                  ;
 
-            var selPri = Pool.Get < CTR_PrioritizedSelector>().SetName("selPri");
+            var selPri = Pool.Get < CTR_PrioritizedSelector>().SetDebugName("selPri");
             selPri.Add(Pool.Get < ACT_LeafNode>(), 100)
                 .Add(Pool.Get < CON_True>(), 100)
                 .Add(Pool.Get < GBTLoop>().SetCnt(1), 100)

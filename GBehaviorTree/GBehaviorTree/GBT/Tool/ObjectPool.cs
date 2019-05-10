@@ -10,6 +10,7 @@ namespace GBT
         private Dictionary<Type, IObjectPool> _objectPools;
         public static int INC_POOL = 100;
         public static int CAPICITY = int.MaxValue;
+
         public ObjectPoolMgr()
         {
             _objectPools = new Dictionary<Type, IObjectPool>();
@@ -29,14 +30,10 @@ namespace GBT
         public static void Free(object obj)
         {
 #if GUCCANG_OBJ_POOL
-            foreach(var pool in Instance._objectPools)
-            {
-                if(pool.Key == obj.GetType())
-                {
-                    pool.Value.Free(obj);
-                    break;
-                }
-            }
+            IObjectPool pool = null;
+            Instance._objectPools.TryGetValue(obj.GetType(), out pool);
+            if (null != pool)
+                pool.Free(obj);
 #endif
         }
 
@@ -79,6 +76,7 @@ namespace GBT
         int FreeCnt();
         int UsedCnt();
     }
+
     class ObjectPool<T> : IObjectPool
        where T : class, new()
     {
@@ -123,12 +121,10 @@ namespace GBT
             resize();
             return (T)obj;
         }
-
         public int UsedCnt()
         {
             return _usedCnt;
         }
-
         public int FreeCnt()
         {
             return _freeObjs.Count;
@@ -147,11 +143,10 @@ namespace GBT
         }
         private void resize()
         {
-            return;
             int threshold = (int)(_freeObjs.Count * 0.5f);
             if (_usedCnt < threshold)
             {
-                int rmCnt = (int)(threshold * 0.2f); // 0.1 of taotal
+                int rmCnt = (int)(threshold * 0.2f); // 0.1 of total
                 for (int i = 0; i < rmCnt; ++i)
                     _freeObjs.RemoveFirst();
             }

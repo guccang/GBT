@@ -24,9 +24,9 @@ namespace GBT
                 _indexPriority.Add(index, weight);
             return this;
         }
-        public new CTR_PrioritizedSelector SetName(string name)
+        public new CTR_PrioritizedSelector SetDebugName(string name)
         {
-            base.SetName(name);
+            base.SetDebugName(name);
             return this;
         }
      
