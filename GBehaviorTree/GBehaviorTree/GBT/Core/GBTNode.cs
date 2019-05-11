@@ -179,15 +179,13 @@ namespace GBT
             return _state != ENodeState.running;
         }
 
-
+        [System.Diagnostics.Conditional("GUCCANG_OBJ_POOL")]
         public virtual void Free()
         {
-#if GUCCANG_OBJ_POOL
             if (null != _preCondition)
                 _preCondition.Free();
 
-            ObjectPoolMgr.Free(this);
-#endif
+            ObjectPoolMgr.Push(this);
         }
 
         /// <summary>

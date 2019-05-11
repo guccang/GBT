@@ -31,79 +31,33 @@ namespace GBehaviorTreeTest
             LogConfig.InitLog();
             var log = LogConfig.GetLog(typeof(Program));
 
-            GBehaviorTree tree = Pool.Get<GBehaviorTree>();
+            GBehaviorTree tree = Pool.Pop<GBehaviorTree>();
 
-            var seq = Pool.Get<GBTSequence>().SetDebugName("seq");
-
-            seq.Add(Pool.Get<GBTCondition>())
-                .Add(Pool.Get< ACT_LeafNode>())
-                .Add(Pool.Get< GBTLoop>().SetCnt(3))
-                ;
-
-            var loop = Pool.Get < GBTLoop>().SetCnt(10).SetDebugName("loop");
-            loop.Add(Pool.Get < ACT_LeafNode>())
-                .Add(Pool.Get < ACT_CalcSkillId>())
-                ;
-
-            var sel = Pool.Get < GBTSelector>().SetDebugName("sel");
-                sel.Add(Pool.Get < GBTIdle>().SetPreCondition(Pool.Get < CON_CanIdle>()))
-                .Add(Pool.Get < GBTFight>().SetPreCondition(Pool.Get < CON_False>()))
-                .Add(Pool.Get < GBTLoop>().SetCnt(10))
-                ;
-
-            var seqNot = Pool.Get < GBTSequence>().SetDebugName("seqNot");
-            seqNot.Add(Pool.Get < GBTSequence>())
-                 .Add(Pool.Get < CON_Not>().Add(Pool.Get < CON_CanIdle>()))
-                 .Add(Pool.Get < ACT_LeafNode>())
-                 .Add(Pool.Get < GBTLoop>().SetCnt(3).Add(Pool.Get < ACT_LeafNode>()))
-                 ;
-
-            var seqOr = Pool.Get < GBTSequence>().SetDebugName("seqOr");
-            seqOr
-                 .Add(Pool.Get < CON_Or>().Add(Pool.Get < CON_CanIdle>()).Add(Pool.Get < CON_True>()))
-                 .Add(Pool.Get < ACT_LeafNode>())
-                 ;
-
-            var seqAnd = Pool.Get < GBTSequence>().SetDebugName("seqAnd");
-            seqAnd
-                 .Add(Pool.Get < CON_And>().Add(Pool.Get < CON_CanIdle>()).Add(Pool.Get < CON_True>()))
-                 .Add(Pool.Get < ACT_LeafNode>())
-                 ;
-
-            var selPri = Pool.Get < CTR_PrioritizedSelector>().SetDebugName("selPri");
-            selPri.Add(Pool.Get < ACT_LeafNode>(), 100)
-                .Add(Pool.Get < CON_True>(), 100)
-                .Add(Pool.Get < GBTLoop>().SetCnt(1), 100)
-                ;
-
-            List<GBTNode> trees = Pool.Get<List<GBTNode>>();
-            trees.Add(seq);
-            trees.Add(loop);
-            trees.Add(sel);
-            trees.Add(seqNot);
-            trees.Add(seqOr);
-            trees.Add(seqAnd);
-            trees.Add(selPri);
-
-
+            var trees = test.createTest1();
             int cnt = trees.Count;
             System.Random r = new System.Random();
-            tree.SetCurrentTree(selPri);
-            for (int i=0;i<30000;++i)
+            for (int i=0;i<300;++i)
             {
                 log.Warn($"update..... {i}");
-                //if(tree.IsFinish())
-                //    tree.SwitchTo(trees[r.Next(cnt)]);
+                if(tree.IsFinish())
+                    tree.SwitchTo(trees[r.Next(cnt)]);
                 tree.Update();
                 if (tree.IsFinish())
                     tree.Transition();
             }
 
+            System.Random ran = new System.Random();
+            int poolCnt = 100;
+            while(poolCnt-->0)
+            {
+                ran = Pool.Pop<System.Random>();
+                Pool.Push(ran);
+            }
             // Object Pool
             foreach (var subTree in trees)
                 subTree.Free();
-            Pool.Free(tree);
-            Pool.Free(trees);
+            Pool.Push(tree);
+            Pool.Push(trees);
             Pool.Test();
             log.Debug("Hello World!");
         }
